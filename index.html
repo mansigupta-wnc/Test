@@ -8,77 +8,55 @@
       font-family: sans-serif;
       padding: 2em;
     }
-    #startChatButton {
-      padding: 1em 2em;
-      background: #0070d2;
-      color: white;
-      border: none;
-      font-size: 1rem;
-      border-radius: 5px;
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
-  <h1>Test Agentforce Chat</h1>
-  <p>Click the button to launch the chat with a hardcoded email.</p>
-  <button id="startChatButton">Start Chat</button>
+  <h1>Agentforce Chat Test</h1>
+  <p>The chat should be available in the corner. It will inject the user's email automatically.</p>
 
-  <!-- Agentforce Deployment Snippet -->
+  <!-- Embedded Messaging Deployment -->
   <script type="text/javascript">
     function initEmbeddedMessaging() {
       try {
         embeddedservice_bootstrap.settings.language = 'en_US';
 
         embeddedservice_bootstrap.init(
-          '00DVA000004yOwn', // 🔁 Replace with your Salesforce Org ID
-          'Test',
-          'https://serviceactivator--scsandbox.sandbox.my.site.com/ESWTest1751966941099',
+          '00DVA000004yOwn', // 🔁 Replace with your Org ID
+          'Test', // 🔁 Replace with correct Deployment API name
+          'https://serviceactivator--scsandbox.sandbox.my.site.com/ESWTest1751966941099', // 🔁 Replace with your deployment path
           {
             scrt2URL: 'https://serviceactivator--scsandbox.sandbox.my.salesforce-scrt.com'
           }
         );
       } catch (err) {
-        console.error('Error initializing Agentforce:', err);
+        console.error('Error initializing Embedded Messaging:', err);
       }
     }
   </script>
 
-  <!-- Load Bootstrap JS (onload calls initEmbeddedMessaging) -->
   <script
     type="text/javascript"
     src="https://serviceactivator--scsandbox.sandbox.my.site.com/ESWTest1751966941099/assets/js/bootstrap.min.js"
     onload="initEmbeddedMessaging()">
   </script>
 
-  <!-- Prechat Logic -->
   <script>
-    function callPrechatAPI() {
-      console.log("Injecting hidden field and launching chat...");
+    window.addEventListener("onEmbeddedMessagingReady", function () {
+      console.log("Embedded Messaging is ready. Injecting prechat fields...");
+
       if (
         window.embeddedservice_bootstrap &&
         embeddedservice_bootstrap.prechatAPI &&
         typeof embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields === "function"
       ) {
         embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({
-          "CustomerEmailId": "testuser@example.com"
+          CustomerEmailId: "testuser@example.com"
         });
-        embeddedservice_bootstrap.startChat();
+        console.log("✅ Email injected into prechat fields.");
       } else {
-        console.warn("Agentforce script not ready. Retrying...");
-        setTimeout(callPrechatAPI, 500);
+        console.warn("⚠️ prechatAPI not ready yet. Will retry...");
+        setTimeout(arguments.callee, 500); // retry
       }
-    }
-
-    window.addEventListener("load", function () {
-      const button = document.getElementById("startChatButton");
-      if (button) {
-        button.addEventListener("click", callPrechatAPI);
-      }
-    });
-
-    window.addEventListener("onEmbeddedMessagingReady", function () {
-      console.log("Agentforce script fully loaded.");
     });
   </script>
 </body>
