@@ -30,13 +30,18 @@
       try {
         embeddedservice_bootstrap.settings.language = 'en_US';
         embeddedservice_bootstrap.init(
-          '00DVA000004yOwn', // 🔁 Replace this with your Org ID
-          'ESD_7JULY',
-          'https://serviceactivator--scsandbox.sandbox.my.site.com/ESWESD7JULY1751869705882',
-          {
-            scrt2URL: 'https://serviceactivator--scsandbox.sandbox.my.salesforce-scrt.com'
-          }
-        );
+				'00DVA000004yOwn',
+				'GitHub',
+				'https://serviceactivator--scsandbox.sandbox.my.site.com/ESWGitHub1751966091137',
+				{
+					scrt2URL: 'https://serviceactivator--scsandbox.sandbox.my.salesforce-scrt.com'
+				}
+			);
+		} catch (err) {
+			console.error('Error loading Embedded Messaging: ', err);
+		}
+	};
+
       } catch (err) {
         console.error('Error initializing Agentforce:', err);
       }
