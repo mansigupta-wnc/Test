@@ -29,55 +29,20 @@
     function initEmbeddedMessaging() {
       try {
         embeddedservice_bootstrap.settings.language = 'en_US';
-        embeddedservice_bootstrap.init(
-				'00DVA000004yOwn',
-				'Test',
-				'https://serviceactivator--scsandbox.sandbox.my.site.com/ESWTest1751966941099',
-				{
-					scrt2URL: 'https://serviceactivator--scsandbox.sandbox.my.salesforce-scrt.com'
-				}
-			);
-		} catch (err) {
-			console.error('Error loading Embedded Messaging: ', err);
-		}
-	};
 
+        embeddedservice_bootstrap.init(
+          '00DVA000004yOwn', // 🔁 Replace with your Salesforce Org ID
+          'ESD_7JULY',
+          'https://serviceactivator--scsandbox.sandbox.my.site.com/ESWESD7JULY1751869705882',
+          {
+            scrt2URL: 'https://serviceactivator--scsandbox.sandbox.my.salesforce-scrt.com'
+          }
+        );
       } catch (err) {
         console.error('Error initializing Agentforce:', err);
       }
     }
   </script>
-  <script type="text/javascript" src="https://serviceactivator--scsandbox.sandbox.my.site.com/ESWESD7JULY1751869705882/assets/js/bootstrap.min.js" onload="initEmbeddedMessaging()"></script>
 
-  <!-- Safe Prechat Setup -->
-  <script>
-    function callPrechatAPI() {
-      console.log("Injecting hidden field and launching chat...");
-      if (
-        window.embeddedservice_bootstrap &&
-        embeddedservice_bootstrap.prechatAPI &&
-        typeof embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields === "function"
-      ) {
-        embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({
-          "CustomerEmailId": "testuser@example.com"
-        });
-        embeddedservice_bootstrap.startChat();
-      } else {
-        console.warn("Agentforce script not ready. Retrying...");
-        setTimeout(callPrechatAPI, 500);
-      }
-    }
-
-    window.addEventListener("load", function () {
-      const button = document.getElementById("startChatButton");
-      if (button) {
-        button.addEventListener("click", callPrechatAPI);
-      }
-    });
-
-    window.addEventListener("onEmbeddedMessagingReady", function () {
-      console.log("Agentforce is fully loaded and ready.");
-    });
-  </script>
-</body>
-</html>
+  <!-- Load Bootstrap JS (onload calls initEmbeddedMessaging) -->
+  <sc
