@@ -2,84 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Agentforce Chat Test</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      padding: 2em;
-    }
-    #startChatButton {
-      padding: 1em 2em;
-      background: #0070d2;
-      color: white;
-      border: none;
-      font-size: 1rem;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-  </style>
+  <title>Agentforce Chat</title>
 </head>
 <body>
-  <h1>Test Agentforce Chat</h1>
-  <p>Click the button to launch the chat with a hardcoded email.</p>
-  <button id="startChatButton">Start Chat</button>
+  <h2>Agentforce Chat</h2>
 
-  <!-- Agentforce Deployment Snippet -->
+  <!-- Init Embedded Messaging -->
   <script type="text/javascript">
     function initEmbeddedMessaging() {
       try {
         embeddedservice_bootstrap.settings.language = 'en_US';
 
         embeddedservice_bootstrap.init(
-          '00DVA000004yOwn', // 🔁 Replace with your Salesforce Org ID
-          'Test',
+          '00DVA000004yOwn', // Replace with your Salesforce Org ID
+          'ESWTest1751966941099', // Your correct Deployment Name
           'https://serviceactivator--scsandbox.sandbox.my.site.com/ESWTest1751966941099',
           {
             scrt2URL: 'https://serviceactivator--scsandbox.sandbox.my.salesforce-scrt.com'
           }
         );
       } catch (err) {
-        console.error('Error initializing Agentforce:', err);
+        console.error('Error initializing Embedded Messaging:', err);
       }
     }
+
+    // Inject hidden prechat field after chat is ready
+    window.addEventListener("onEmbeddedMessagingReady", function () {
+      console.log("✅ Chat ready — injecting email...");
+      try {
+        if (
+          window.embeddedservice_bootstrap &&
+          embeddedservice_bootstrap.prechatAPI &&
+          typeof embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields === 'function'
+        ) {
+          embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({
+            CustomerEmailId: "testuser@example.com" // ✅ Must match pre-chat field API name
+          });
+        } else {
+          console.warn("⚠️ Chat API not ready to inject hidden fields.");
+        }
+      } catch (e) {
+        console.error("❌ Error setting hidden fields:", e);
+      }
+    });
   </script>
 
-  <!-- Load Bootstrap JS (onload calls initEmbeddedMessaging) -->
+  <!-- Load Embedded Service Bootstrap -->
   <script
     type="text/javascript"
     src="https://serviceactivator--scsandbox.sandbox.my.site.com/ESWTest1751966941099/assets/js/bootstrap.min.js"
     onload="initEmbeddedMessaging()">
-  </script>
-
-  <!-- Prechat Logic -->
-  <script>
-    function callPrechatAPI() {
-      console.log("Injecting hidden field and launching chat...");
-      if (
-        window.embeddedservice_bootstrap &&
-        embeddedservice_bootstrap.prechatAPI &&
-        typeof embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields === "function"
-      ) {
-        embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({
-          "CustomerEmailId": "testuser@example.com"
-        });
-        embeddedservice_bootstrap.startChat();
-      } else {
-        console.warn("Agentforce script not ready. Retrying...");
-        setTimeout(callPrechatAPI, 500);
-      }
-    }
-
-    window.addEventListener("load", function () {
-      const button = document.getElementById("startChatButton");
-      if (button) {
-        button.addEventListener("click", callPrechatAPI);
-      }
-    });
-
-    window.addEventListener("onEmbeddedMessagingReady", function () {
-      console.log("Agentforce script fully loaded.");
-    });
   </script>
 </body>
 </html>
