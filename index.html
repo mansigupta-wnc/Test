@@ -44,5 +44,41 @@
     }
   </script>
 
-  <!-- Load Bootstrap JS (onload calls initEmbeddedMessaging) -->
-  <sc
+  <script
+    type="text/javascript"
+    src="https://serviceactivator--scsandbox.sandbox.my.site.com/ESWTest1751966941099/assets/js/bootstrap.min.js"
+    onload="initEmbeddedMessaging()">
+  </script>
+
+  <!-- Prechat Logic -->
+  <script>
+    function callPrechatAPI() {
+      console.log("Injecting hidden field and launching chat...");
+      if (
+        window.embeddedservice_bootstrap &&
+        embeddedservice_bootstrap.prechatAPI &&
+        typeof embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields === "function"
+      ) {
+        embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({
+          "CustomerEmailId": "testuser@example.com"
+        });
+        embeddedservice_bootstrap.startChat();
+      } else {
+        console.warn("Agentforce script not ready. Retrying...");
+        setTimeout(callPrechatAPI, 500);
+      }
+    }
+
+    window.addEventListener("load", function () {
+      const button = document.getElementById("startChatButton");
+      if (button) {
+        button.addEventListener("click", callPrechatAPI);
+      }
+    });
+
+    window.addEventListener("onEmbeddedMessagingReady", function () {
+      console.log("Agentforce script fully loaded.");
+    });
+  </script>
+</body>
+</html>
